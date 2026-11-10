@@ -13,5 +13,10 @@
       default = vibrant;
       vibrant = pkgs.callPackage ./package.nix { };
     });
+
+    nixosModules = rec {
+      default = vibrant;
+      vibrant = import ./module.nix;
+    };
   };
 }
