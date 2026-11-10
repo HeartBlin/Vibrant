@@ -14,7 +14,6 @@ in {
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.callPackage ./package.nix { };
-      defaultText = lib.literalExpression "pkgs.callPackage ./package.nix { }";
       description = "The 'vibrant' package to install";
     };
   };
