@@ -32,6 +32,7 @@ fn main() {
     );
 
     run_nix_build(&flake_ref, &state, &host);
+    show_system_diff(&state);
     register_nixos_generation(&state);
     switch_to_configuration(&state);
 }
@@ -108,6 +109,22 @@ fn run_nix_build(flake_ref: &str, state: &std::path::Path, host: &str) {
 
     if !nom_status.success() {
         eprintln!("Warning: nom exited with status: {}", nom_status);
+    }
+}
+
+fn show_system_diff(state: &std::path::Path) {
+    let result =
+        std::fs::canonicalize(state.join("result")).expect("Failed to resolve result symlink");
+
+    let status = std::process::Command::new("nvd")
+        .arg("diff")
+        .arg("/run/current-system")
+        .arg(result)
+        .status()
+        .expect("Failed to execute 'nvd'");
+
+    if !status.success() {
+        eprintln!("Warning: nvd exited with status {}", status);
     }
 }
 
