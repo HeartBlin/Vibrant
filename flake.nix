@@ -11,12 +11,12 @@
       pkgs = inputs.nixpkgs.legacyPackages.${system};
     in rec {
       default = vibrant;
-      vibrant = pkgs.callPackage ./package.nix { };
+      vibrant = pkgs.callPackage ./nix/package.nix { };
     });
 
     nixosModules = rec {
       default = vibrant;
-      vibrant = import ./module.nix;
+      vibrant = import ./nix/module.nix;
     };
   };
 }

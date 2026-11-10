@@ -3,8 +3,8 @@
 rustPlatform.buildRustPackage {
   pname = "vibrant";
   version = "0.1.2";
-  cargoLock.lockFile = ./Cargo.lock;
-  src = lib.cleanSource ./.;
+  cargoLock.lockFile = ../Cargo.lock;
+  src = lib.cleanSource ../.;
 
   nativeBuildInputs = [ makeWrapper ];
   postInstall = ''
