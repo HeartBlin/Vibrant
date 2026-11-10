@@ -1,5 +1,3 @@
-use std::io::BufRead;
-
 fn main() {
     // Get the path of the flake
     let flake_path = std::env::var_os("VIBRANT_DIR")
@@ -76,31 +74,41 @@ fn ensure_state_directory() -> std::io::Result<std::path::PathBuf> {
 fn run_nix_build(flake_ref: &str, state: &std::path::Path, host: &str) {
     println!("# Building {}", host);
 
-    let mut command = std::process::Command::new("nix")
+    let mut nix_child = std::process::Command::new("nix")
         .arg("build")
         .arg(flake_ref)
         .arg("--out-link")
         .arg(state.join("result"))
         .arg("--log-format")
-        .arg("bar-with-logs")
+        .arg("internal-json")
         .stderr(std::process::Stdio::piped())
-        .stdout(std::process::Stdio::inherit())
+        .stdout(std::process::Stdio::null())
         .spawn()
         .expect("Failed to spawn nix process");
 
-    if let Some(stderr) = command.stderr.take() {
-        let reader = std::io::BufReader::new(stderr);
-        for text in reader.lines().map_while(Result::ok) {
-            println!("{}", text);
-        }
+    let nix_stderr = nix_child
+        .stderr
+        .take()
+        .expect("Failed to capture nix stderr");
+
+    let mut nom_child = std::process::Command::new("nom")
+        .arg("--json")
+        .stdin(nix_stderr)
+        .stdout(std::process::Stdio::inherit())
+        .stderr(std::process::Stdio::inherit())
+        .spawn()
+        .expect("Failed to spawn nom process");
+
+    let nix_status = nix_child.wait().expect("Failed to wait on nix process");
+    let nom_status = nom_child.wait().expect("Failed to wait on nom process");
+
+    if !nix_status.success() {
+        panic!("Nix build failed with status: {}", nix_status);
     }
 
-    let status = command.wait().expect("Failed to wait on child process");
-    if !status.success() {
-        panic!("Nix build failed with {}", status);
+    if !nom_status.success() {
+        eprintln!("Warning: nom exited with status: {}", nom_status);
     }
-
-    println!("Nix build completed");
 }
 
 fn register_nixos_generation(state: &std::path::Path) {
