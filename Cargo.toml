@@ -6,8 +6,7 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0.104"
 
-[profiles.release]
+[profile.release]
 opt-level = 3
 lto = true
-codegen-unit = 1
 strip = true
