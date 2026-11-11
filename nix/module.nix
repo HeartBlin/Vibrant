@@ -13,7 +13,7 @@ in {
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.callPackage ./package.nix { };
+      default = pkgs.callPackage ./default.nix { };
       description = "The 'vibrant' package to install";
     };
   };

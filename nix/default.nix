@@ -2,7 +2,7 @@
 
 rustPlatform.buildRustPackage {
   pname = "vibrant";
-  version = "0.1.2";
+  version = "1.0.0";
   cargoLock.lockFile = ../Cargo.lock;
   src = lib.cleanSource ../.;
 
