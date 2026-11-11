@@ -23,6 +23,7 @@ pub fn run_nix_build(flake_path: &Path, state: &Path, host: &str) -> Result<Path
 
     // TOCTOU
     anyhow::ensure!(state.is_dir(), "State directory is missing");
+    anyhow::ensure!(flake_path.is_dir(), "Flake directory is missing");
 
     // Get the folder to leave the build in
     let out_link = state.join("result");
