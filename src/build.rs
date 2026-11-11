@@ -22,7 +22,7 @@ pub fn run_nix_build(flake_path: &Path, state: &Path, host: &str) -> Result<Path
     println!("# Building '{}'", host);
 
     // TOCTOU
-    anyhow::ensure!(state.is_dir(), "State directory is missing",);
+    anyhow::ensure!(state.is_dir(), "State directory is missing");
 
     // Get the folder to leave the build in
     let out_link = state.join("result");
@@ -98,7 +98,7 @@ pub fn run_nix_build(flake_path: &Path, state: &Path, host: &str) -> Result<Path
 /// * The `nvd` binary cannot be found in `PATH` or fails to spawn.
 pub fn show_system_diff(symlink: &Path) -> Result<()> {
     // TOCTOU
-    anyhow::ensure!(symlink.is_dir(), "Result directory is missing",);
+    anyhow::ensure!(symlink.is_dir(), "Result directory is missing");
 
     // Set up nvd
     let status = Command::new("nvd")
@@ -111,6 +111,36 @@ pub fn show_system_diff(symlink: &Path) -> Result<()> {
     if !status.success() {
         eprintln!("Warning: nvd exited with status {}", status);
     }
+
+    Ok(())
+}
+
+/// Update a flake.lock file.
+///
+/// Invokes the external `nom` command to run the equivalent of a `nix flake update`
+/// on a specific flake, specified by `flake_path`
+///
+/// # Errors
+///
+/// This function will return an error in the following situations:
+/// * `flake_path` does not exist or does not resolve to a directory.
+/// * The `nom` binary cannot be found in `PATH` or fails to spawn.
+/// * The command exited with an exit code that differs from `0`
+pub fn flake_update(flake_path: &Path) -> Result<()> {
+    // TOCTOU
+    anyhow::ensure!(flake_path.is_dir(), "Flake directory is missing");
+
+    // Use `nom` here for a nice "Finished at" footer
+    let status = Command::new("nom")
+        .arg("flake")
+        .arg("update")
+        .arg("--flake")
+        .arg(flake_path)
+        .status()
+        .context("Failed to execute 'nom'")?;
+
+    // Check if we failed to update the flake
+    anyhow::ensure!(status.success(), "'nom' failed with status: {}", status);
 
     Ok(())
 }

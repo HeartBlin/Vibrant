@@ -1,10 +1,16 @@
 mod build;
+mod cli;
 mod state;
 mod switch;
 use anyhow::{Context, Result};
 use std::{env, fs, path::PathBuf};
 
+use crate::build::flake_update;
+
 fn main() -> Result<()> {
+    // Parse the CLI args
+    let args = cli::parse();
+
     // Get the path of the flake
     let flake_path = env::var_os("VIBRANT_DIR")
         .map(PathBuf::from)
@@ -26,6 +32,11 @@ fn main() -> Result<()> {
 
     // Get the state folder ready
     let state = state::ensure_state_directory()?;
+
+    // Do we need to update the flake?
+    if args.update {
+        flake_update(&flake_path)?
+    }
 
     // Build the new generation
     let symlink = build::run_nix_build(&flake_path, &state, &host)?;
