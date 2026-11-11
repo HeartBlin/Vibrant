@@ -43,6 +43,7 @@ pub fn run_nix_build(flake_path: &Path, state: &Path, host: &str) -> Result<Path
         .arg(&out_link)
         .arg("--log-format")
         .arg("internal-json")
+        .arg("-v")
         .stderr(Stdio::piped())
         .stdout(Stdio::null())
         .spawn()
