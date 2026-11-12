@@ -45,7 +45,7 @@ fn main() -> Result<()> {
     build::show_system_diff(&symlink)?;
 
     // Activate the generation
-    switch::activate_generation(&symlink)?;
+    switch::activate_generation(&symlink, args.boot)?;
 
     Ok(())
 }
