@@ -85,7 +85,7 @@ In no particular order:
 
 * [`nh`](https://github.com/nix-community/nh): Serving as inspiration, despite this project being a mere wrapper. Use this instead of `Vibrant`, it just works better.
 * [`nom`](https://github.com/maralorn/nix-output-monitor): What powers most of this tools pretty graphics. In charge of showing the pretty graphs while building.
-* [`nvd`](https://sr.ht/~khumba/nvd/): Powers the diffs after a build succedes.
+* [`nvd`](https://sr.ht/~khumba/nvd/): Powers the diffs after a build succeeds.
 * And to the broader Rust community, which drove me to try the language out in the first place
 
 ---
