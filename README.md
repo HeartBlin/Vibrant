@@ -56,19 +56,9 @@ In its current form, `Vibrant` is quite feature-less, it being only in charge of
 
 The flake location is automatically aquired from a set environment variable, namely: `VIBRANT_DIR`, which the module can set.
 
-```bash
-λ vibrant --help
-Usage: vibrant [OPTIONS]
-
-Options:
-  -u, --update   Update all flake inputs
-  -b, --boot     Use `boot` instead of `switch`
-  -h, --help     Print help
-  -V, --version  Print version
-```
-
 * `--update / -u`: Does a `nix flake update` (actually using [`nom`](###special-thanks)) before a build.
 * `--boot / -b`: Does a `switch-to-configuration boot` instead of the default, being `switch`.
+* `--hostname / -h`: Specify a hostname / attrname explicitly.
 
 ### Roadmap
 
@@ -77,8 +67,8 @@ I intend to keep the tools scope contrived, so most of these will be about easin
 Still, there are some extra features I want to work on:
 
 - [x] ~~_Flake update functionality._~~
-- [x] ~~_Choosing between `boot` or `switch`._~~
-- [ ] Hostname overriding.
+- [x] ~~_Choosing between boot or switch._~~
+- [x] ~~_Hostname overriding._~~
 - [ ] Remote building.
 - [ ] A nicer CLI (my own prints).
 

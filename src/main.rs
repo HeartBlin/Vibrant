@@ -24,11 +24,15 @@ fn main() -> Result<()> {
         flake_path.display()
     );
 
-    // Get the host name
-    let host = fs::read_to_string("/etc/hostname")
-        .context("Failed to read hostname file")?
-        .trim()
-        .to_string();
+    // If we got the host name from the CLI, use that
+    // If not, get the current machines host name
+    let host = match args.hostname {
+        Some(h) => h,
+        None => fs::read_to_string("/etc/hostname")
+            .context("Failed to read hostname file")?
+            .trim()
+            .to_string(),
+    };
 
     // Get the state folder ready
     let state = state::ensure_state_directory()?;
